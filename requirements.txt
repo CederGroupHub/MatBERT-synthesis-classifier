@@ -1,0 +1,6 @@
+numpy
+pymongo
+scipy
+torch
+tqdm
+transformers
