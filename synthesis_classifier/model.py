@@ -45,7 +45,7 @@ def get_tokenizer() -> BertTokenizerFast:
         )
     except OSError:
         raise OSError('Failed to load model. Did you download the models by '
-                      '`python -m synthesis_bert.model download`?')
+                      '`python -m synthesis_classifier.model download`?')
 
 
 def get_model() -> BertForSequenceClassification:
@@ -75,7 +75,7 @@ def get_model() -> BertForSequenceClassification:
         )
     except OSError:
         raise OSError('Failed to load model. Did you download the models by '
-                      '`python -m synthesis_bert.model download`?')
+                      '`python -m synthesis_classifier.model download`?')
     model.to(torch_dev())
 
     return model
