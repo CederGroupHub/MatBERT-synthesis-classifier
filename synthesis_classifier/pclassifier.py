@@ -61,7 +61,7 @@ def run_batch(batch_text: List[str],
     for key, value in batch.items():
         batch[key] = value.to(torch_dev())
 
-    outputs, = model(**batch)
+    outputs = model(**batch, return_dict=True).logits
 
     scores = get_classification_scores(outputs)
     results = [{
@@ -160,8 +160,8 @@ def subprocess_classifier(queue, db_writer_queue, dev_id=0):
         batch = batch2tensor(batch_numpy)
 
         with torch.no_grad():
-            output, = model(**batch)
-            scores = get_classification_scores(output)
+            outputs = model(**batch, return_dict=True).logits
+            scores = get_classification_scores(outputs)
 
         db_writer_queue.put((meta_ids, scores))
 
