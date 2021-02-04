@@ -38,10 +38,13 @@ def make_batch(it: Union[Sized, Iterator], batch_size: int):
     return Batch()
 
 
-def perform_collection(db_writer_cls, batch_generator, job_script=None):
+def perform_collection(db_writer_cls_or_obj, batch_generator, job_script=None):
     tokenizer = get_tokenizer()
 
-    with db_writer_cls() as db_writer_queue:
+    if isinstance(db_writer_cls_or_obj, type):
+        db_writer_cls_or_obj = db_writer_cls_or_obj()
+
+    with db_writer_cls_or_obj as db_writer_queue:
         with MultiprocessingClassifier(db_writer_queue) as worker_queues:
             job_submitted = False
 

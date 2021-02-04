@@ -64,11 +64,13 @@ class PatentParagraphsByQuery(object):
 
 
 class PatentsDBWriter(object):
-    def __init__(self):
+    def __init__(self, meta_col_name: str = 'patent_text_section_meta'):
         self.mp_ctx = get_context('spawn')  # To be compatible with classifier workers
 
         self.db_writer_queue = self.mp_ctx.Queue(maxsize=512)
-        self.process = self.mp_ctx.Process(target=db_annotate_process, args=(self.db_writer_queue,))
+        self.process = self.mp_ctx.Process(
+            target=db_annotate_process,
+            args=(self.db_writer_queue, meta_col_name))
         self.process.start()
 
     def __enter__(self):
@@ -79,8 +81,8 @@ class PatentsDBWriter(object):
         self.process.join()
 
 
-def db_annotate_process(queue: Queue):
-    meta = get_connection().patent_text_section_meta
+def db_annotate_process(queue: Queue, meta_col_name: str):
+    meta = getattr(get_connection(), meta_col_name)
     meta.create_index([('classification', HASHED)])
     meta.create_index('paragraph_id')
     meta.create_index([('classifier_version', HASHED)])
