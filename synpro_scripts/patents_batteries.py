@@ -24,7 +24,7 @@ class PatentBatteryParagraphs(object):
         for item in cursor:
             paragraph = item['p'][0]['text']
             if paragraph is not None and paragraph.strip():
-                yield item['paragraph_id'], item['text']
+                yield item['paragraph_id'], item['p'][0]['text']
 
     def __len__(self):
         return next(self.db.patent_section_battery.aggregate([
