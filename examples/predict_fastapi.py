@@ -54,6 +54,13 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.post("/paragraph_classifier", response_model=APIResponse)
+@app.post("/paragraph_classifier_batch", response_model=APIResponse)
 def read_item(json_input: ClassifierInput):
     return get_response_json(json_input.paragraphs)
+
+
+@app.get("/paragraph_classifier", response_model=ClassifierOutput)
+def read_item(paragraph: str):
+    result = run_batch([paragraph], model, tokenizer)[0]
+
+    return JSONResponse(result)
