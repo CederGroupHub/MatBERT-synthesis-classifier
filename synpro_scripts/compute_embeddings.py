@@ -3,13 +3,16 @@ from multiprocessing.queues import Queue
 
 import numpy
 
+from synthesis_classifier import classifier_version
 from synthesis_classifier.database.synpro import MetaCollectionIteratorByQuery, get_connection
 from synthesis_classifier.multiprocessing_classifier import perform_collection, make_batch
+
+version = classifier_version.split('_')[-1]
 
 
 def not_embedding_paragraphs():
     query = {
-        'paragraph_embedding': {'$exists': False}
+        ('paragraph_embedding_' + version): {'$exists': False}
     }
 
     return MetaCollectionIteratorByQuery(query)
@@ -42,12 +45,12 @@ def embedding_writer(queue: Queue):
         hidden_states = hidden_states[:, 0]
 
         for meta_id, hs in zip(meta_ids, hidden_states):
-            # meta.update_one(
-            #     {'_id': meta_id},
-            #     {'$set': {
-            #         'paragraph_embedding': hs.tolist(),
-            #     }}
-            # )
+            meta.update_one(
+                {'_id': meta_id},
+                {'$set': {
+                    ('paragraph_embedding_' + version): hs.tolist(),
+                }}
+            )
             print(meta_id, hs.shape)
 
 

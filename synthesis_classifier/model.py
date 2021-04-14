@@ -79,6 +79,7 @@ def get_model() -> BertForSequenceClassification:
                       '`python -m synthesis_classifier.model download`?')
     model.to(torch_dev())
 
+    model.eval()
     return model
 
 
