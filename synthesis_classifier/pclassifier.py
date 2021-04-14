@@ -160,10 +160,11 @@ def subprocess_classifier(queue, db_writer_queue, dev_id=0):
         batch = batch2tensor(batch_numpy)
 
         with torch.no_grad():
-            outputs = model(**batch, return_dict=True).logits
-            scores = get_classification_scores(outputs)
+            output = model(**batch, return_dict=True)
+            hidden_states = output.hidden_states.detach().cpu().numpy()
+            scores = get_classification_scores(output.logits)
 
-        db_writer_queue.put((meta_ids, scores))
+        db_writer_queue.put((meta_ids, scores, hidden_states))
 
 
 class MultiprocessingClassifier(object):

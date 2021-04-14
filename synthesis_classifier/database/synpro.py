@@ -69,7 +69,7 @@ def db_annotate_process(queue: Queue):
         batch_result = queue.get()
         if batch_result is None:
             break
-        meta_ids, scores = batch_result
+        meta_ids, scores = batch_result[:2]
 
         for meta_id, score in zip(meta_ids, scores):
             best_score = [(x, y) for (x, y) in score.items() if y > 0.5]

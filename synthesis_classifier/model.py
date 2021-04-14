@@ -63,6 +63,7 @@ def get_model() -> BertForSequenceClassification:
     try:
         config = AutoConfig.from_pretrained(
             output_dir,
+            output_hidden_states=True,
             id2label=id2label,
             label2id=label2id,
             num_labels=num_labels,
