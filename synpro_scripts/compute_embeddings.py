@@ -39,9 +39,15 @@ def embedding_writer(queue: Queue):
         if batch_result is None:
             break
         meta_ids, _, hidden_states = batch_result[:3]
-        hidden_states = hidden_states.astype(numpy.float32)
+        hidden_states = hidden_states[:, 0]
 
         for meta_id, hs in zip(meta_ids, hidden_states):
+            # meta.update_one(
+            #     {'_id': meta_id},
+            #     {'$set': {
+            #         'paragraph_embedding': hs.tolist(),
+            #     }}
+            # )
             print(meta_id, hs.shape)
 
 

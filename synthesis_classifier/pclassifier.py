@@ -161,7 +161,7 @@ def subprocess_classifier(queue, db_writer_queue, dev_id=0):
 
         with torch.no_grad():
             output = model(**batch, return_dict=True)
-            hidden_states = output.hidden_states.detach().cpu().numpy()
+            hidden_states = output.hidden_states[0].detach().cpu().numpy()
             scores = get_classification_scores(output.logits)
 
         db_writer_queue.put((meta_ids, scores, hidden_states))
